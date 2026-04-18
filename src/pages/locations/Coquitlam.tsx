@@ -1,211 +1,389 @@
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Check } from "lucide-react";
+import { Helmet } from 'react-helmet-async';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, CheckCircle, TrendingUp, Star, Zap, Target, Users, MapPin } from 'lucide-react';
+import OurServices from '@/components/OurServices';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { getServiceSchema, getBreadcrumbSchema, getFAQSchema, getWebPageSchema } from '@/lib/structuredData';
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "AP Digital",
-  description:
-    "Digital marketing agency serving Coquitlam, BC businesses with Meta Ads, Google Ads, and social media marketing.",
-  url: "https://ap-digital.ca/coquitlam",
-  telephone: "+1-778-682-5772",
-  email: "apdigital.core@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Coquitlam",
-    addressRegion: "BC",
-    addressCountry: "CA",
+const TITLE = 'Digital Marketing Agency Coquitlam BC | Meta Ads & Google Ads | AP Digital';
+const DESC = 'Digital marketing agency in Coquitlam & Tri-Cities, BC. AP Digital runs Meta Ads & Google Ads for trades, salons, realtors & coaches. Get leads in 2 weeks. No contracts.';
+const CANONICAL = 'https://coquitlam.ap-digital.ca/';
+const OG_IMAGE = 'https://ap-digital.ca/og-image.png';
+
+const included = [
+  'Meta Ads targeting Coquitlam & Tri-Cities',
+  'Google Ads for high-intent searches',
+  'Google Business Profile optimization',
+  'Review generation & reputation management',
+  'Social media management',
+  'Landing pages for Coquitlam leads',
+  'Monthly ROI reporting',
+  'Local SEO for Coquitlam & Port Moody',
+];
+
+const faqs = [
+  {
+    question: 'How quickly will I see leads in Coquitlam?',
+    answer: 'Most Coquitlam businesses see their first qualified leads within 2 weeks of launching Meta Ads with AP Digital.',
   },
-  areaServed: "Coquitlam, BC",
+  {
+    question: 'Is there a long-term contract for Coquitlam clients?',
+    answer: 'No lock-in contracts. AP Digital works month-to-month with every client in Coquitlam and the Tri-Cities.',
+  },
+  {
+    question: 'How much does digital marketing cost in Coquitlam?',
+    answer: 'Most clients start with $500–$1,500/month in ad spend. Our management fee is transparent and quoted before you commit to anything.',
+  },
+  {
+    question: 'Does AP Digital serve Port Moody and Port Coquitlam too?',
+    answer: 'Yes — we run campaigns across the entire Tri-Cities area including Coquitlam, Port Moody, and Port Coquitlam, as well as New Westminster and Burnaby.',
+  },
+  {
+    question: 'Do you serve Port Moody and Port Coquitlam too?',
+    answer: 'Yes — AP Digital provides full Tri-Cities coverage. Our campaigns geo-target Coquitlam, Port Coquitlam (PoCo), Port Moody, and New Westminster simultaneously or individually depending on your service area. If your customers come from anywhere in the Tri-Cities, we make sure your ads reach them.',
+  },
+  {
+    question: 'Can you help a Coquitlam business compete with Vancouver companies?',
+    answer: 'Yes — this is one of the biggest advantages of geo-targeted paid advertising. When you run Google Ads or Meta Ads for a Coquitlam business, you only pay to reach people in your actual service area. You\'re not competing with budget against every Vancouver agency in a city-wide auction. You\'re targeting Westwood Plateau, Burke Mountain, Maillardville, and the surrounding Tri-Cities area specifically — which means lower costs, higher relevance, and better conversion rates than trying to run a Metro-wide campaign.',
+  },
+  {
+    question: 'What\'s the best platform for Coquitlam service businesses?',
+    answer: 'It depends on your business type. For high-intent searches — someone actively looking for "plumber Coquitlam" or "electrician Port Moody" — Google Ads is typically the highest-converting channel. For awareness, retargeting, and businesses where customers need to see you multiple times before booking (salons, coaches, health & wellness), Meta Ads on Facebook and Instagram work exceptionally well. Most Coquitlam service businesses benefit from both platforms running together. We assess your specific situation on the strategy call and recommend the right starting point.',
+  },
+];
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    getServiceSchema('Digital Marketing Coquitlam BC', DESC, '/coquitlam'),
+    getFAQSchema(faqs),
+    getBreadcrumbSchema([
+      { name: 'Home', url: '/' },
+      { name: 'Coquitlam', url: '/coquitlam' },
+    ]),
+    getWebPageSchema(TITLE, DESC, '/coquitlam'),
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://coquitlam.ap-digital.ca/",
+      "name": "AP Digital — Coquitlam Digital Marketing Agency",
+      "description": DESC,
+      "url": "https://coquitlam.ap-digital.ca/",
+      "telephone": "+1-778-682-5772",
+      "email": "apdigital.core@gmail.com",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Pitt Meadows",
+        "addressRegion": "BC",
+        "postalCode": "V3Y 0G3",
+        "addressCountry": "CA"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Coquitlam" },
+        { "@type": "City", "name": "Port Moody" },
+        { "@type": "City", "name": "Port Coquitlam" },
+        { "@type": "City", "name": "New Westminster" },
+        { "@type": "City", "name": "Pitt Meadows" }
+      ],
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      },
+      "founder": { "@type": "Person", "name": "Arjun Sharma" },
+      "sameAs": ["https://ap-digital.ca"]
+    }
+  ]
 };
 
-const whoWeHelp = [
-  {
-    title: "Trades & Contractors",
-    desc: "plumbers, HVAC, electricians, roofers in Coquitlam & the Tri-Cities",
-  },
-  {
-    title: "Hair Salons & Beauty Studios",
-    desc: "fully booked appointment books through social media ads",
-  },
-  {
-    title: "Real Estate Agents",
-    desc: "buyer and seller leads across Coquitlam, Port Coquitlam & Port Moody",
-  },
-  {
-    title: "Coaches",
-    desc: "growing a coaching business with predictable online leads",
-  },
-];
-
-const whyUs = [
-  "No contracts — month-to-month with every client",
-  "Personal management — Arjun runs your account, no handoffs",
-  "Transparent — you know exactly where every dollar goes",
-  "Local — we know Coquitlam, the Tri-Cities, and Metro Vancouver",
-];
-
-const services = [
-  {
-    title: "Meta Ads",
-    desc: "high-converting ads targeting Coquitlam and Tri-Cities residents",
-  },
-  {
-    title: "Google Ads",
-    desc: "top-of-search visibility when Coquitlam locals search for your service",
-  },
-  {
-    title: "Social Media Management",
-    desc: "consistent posting that builds local brand awareness",
-  },
-  {
-    title: "Lead Generation Systems",
-    desc: "we build the full funnel so leads come to you automatically",
-  },
-];
-
-const CalendlyButton = ({ children }: { children: React.ReactNode }) => (
-  <a
-    href="https://calendly.com/apdigital-core/30min"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-block rounded-lg bg-primary px-8 py-3.5 text-base font-semibold text-primary-foreground transition hover:opacity-90"
-  >
-    {children}
-  </a>
-);
-
 const Coquitlam = () => (
-  <HelmetProvider>
+  <>
     <Helmet>
-      <title>Digital Marketing Agency Coquitlam BC | AP Digital</title>
-      <meta
-        name="description"
-        content="AP Digital helps Coquitlam businesses get more leads with Meta Ads, Google Ads & social media. Serving trades, salons, realtors & coaches in Coquitlam, BC. No contracts."
-      />
-      <link rel="canonical" href="https://ap-digital.ca/coquitlam" />
-      <meta property="og:title" content="Digital Marketing Agency Coquitlam BC | AP Digital" />
-      <meta
-        property="og:description"
-        content="AP Digital helps Coquitlam businesses get more leads with Meta Ads, Google Ads & social media. Serving trades, salons, realtors & coaches in Coquitlam, BC. No contracts."
-      />
-      <meta property="og:url" content="https://ap-digital.ca/coquitlam" />
+      <title>{TITLE}</title>
+      <meta name="description" content={DESC} />
+      <link rel="canonical" href={CANONICAL} />
       <meta property="og:type" content="website" />
-      <meta name="twitter:title" content="Digital Marketing Agency Coquitlam BC | AP Digital" />
-      <meta
-        name="twitter:description"
-        content="AP Digital helps Coquitlam businesses get more leads with Meta Ads, Google Ads & social media. Serving trades, salons, realtors & coaches in Coquitlam, BC. No contracts."
-      />
-      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      <meta property="og:url" content={CANONICAL} />
+      <meta property="og:title" content={TITLE} />
+      <meta property="og:description" content={DESC} />
+      <meta property="og:image" content={OG_IMAGE} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:locale" content="en_CA" />
+      <meta property="og:site_name" content="AP Digital" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={TITLE} />
+      <meta name="twitter:description" content={DESC} />
+      <meta name="twitter:image" content={OG_IMAGE} />
+      <meta name="robots" content="index, follow" />
+      <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
     </Helmet>
-
-    <div className="min-h-screen bg-background text-foreground">
-      <Header />
+    <Header />
+    <main>
 
       {/* Hero */}
-      <section className="py-24 md:py-32">
-        <div className="container mx-auto max-w-3xl px-6 text-center">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight md:text-5xl lg:text-6xl">
-            Digital Marketing Agency in Coquitlam, BC
-          </h1>
-          <p className="mt-4 text-lg font-medium text-primary md:text-xl">
-            More Customers for Your Coquitlam Business. From $500/Month.
-          </p>
-          <p className="mx-auto mt-6 max-w-2xl text-secondary-foreground">
-            AP Digital helps Coquitlam businesses — trades, salons, real estate agents &amp; coaches
-            — get consistent leads through paid ads and social media. No long-term contracts.
-            Personal management. Real results.
-          </p>
-          <div className="mt-10">
-            <CalendlyButton>Book Your Free Call</CalendlyButton>
+      <section className="relative bg-near-black pt-28 pb-20">
+        <div className="container-custom">
+          <div className="max-w-3xl animate-fade-up">
+            <div className="inline-flex items-center gap-2 border border-teal/20 rounded-full px-4 py-1.5 mb-6">
+              <span className="w-2 h-2 rounded-full bg-teal animate-pulse" />
+              <span className="text-teal text-sm font-medium">Serving Coquitlam & Tri-Cities, BC</span>
+            </div>
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-primary-foreground mb-6 leading-tight">
+              Digital Marketing for{' '}
+              <span className="text-gradient">Coquitlam, BC</span>{' '}
+              — Get Consistent, Qualified Leads
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-8">
+              AP Digital helps Coquitlam businesses — and across Port Moody & Port Coquitlam — generate qualified leads with Meta Ads, Google Ads & social media. No contracts, month-to-month.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button asChild variant="hero" size="xl" className="shadow-teal-lg">
+                <a href="https://calendly.com/apdigital-core/30min" target="_blank" rel="noopener noreferrer">
+                  Book Your Free Strategy Call
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </a>
+              </Button>
+              <Button asChild variant="light" size="lg">
+                <a href="/services/paid-ads">See Our Services</a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Strip */}
+      <section className="bg-charcoal py-12">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="font-display text-4xl font-bold text-teal mb-1">2 Weeks</div>
+              <div className="text-muted-foreground text-sm">Average time to first leads</div>
+            </div>
+            <div>
+              <div className="font-display text-4xl font-bold text-teal mb-1">5–10x</div>
+              <div className="text-muted-foreground text-sm">Return on ad spend</div>
+            </div>
+            <div>
+              <div className="font-display text-4xl font-bold text-teal mb-1">$500/mo</div>
+              <div className="text-muted-foreground text-sm">Starting — no contracts</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Who We Help */}
-      <section className="bg-card py-20">
-        <div className="container mx-auto max-w-3xl px-6">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Who We Help in Coquitlam
+      <section className="bg-background py-20">
+        <div className="container-custom">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
+            Who We Help in <span className="text-gradient">Coquitlam</span>
           </h2>
-          <p className="mt-4 text-secondary-foreground">
-            Whether you're a contractor in Port Coquitlam, a salon in Coquitlam Centre, or a
-            realtor covering the Tri-Cities — we help you get found online and turn clicks into
-            booked jobs.
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            Across Coquitlam, Port Moody, and Port Coquitlam — we help local businesses generate leads and grow.
           </p>
-          <ul className="mt-8 space-y-4">
-            {whoWeHelp.map((item) => (
-              <li key={item.title} className="flex items-start gap-3">
-                <Check className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <span>
-                  <strong>{item.title}</strong> — {item.desc}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Why Us */}
-      <section className="py-20">
-        <div className="container mx-auto max-w-3xl px-6">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Why Coquitlam Businesses Work With AP Digital
-          </h2>
-          <p className="mt-4 text-secondary-foreground">
-            Lean, fast campaigns with no bloated agency overhead passed on to you.
-          </p>
-          <ul className="mt-8 space-y-4">
-            {whyUs.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <Check className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Services */}
-      <section className="bg-card py-20">
-        <div className="container mx-auto max-w-3xl px-6">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            What We Do for Coquitlam Businesses
-          </h2>
-          <ul className="mt-8 space-y-4">
-            {services.map((item) => (
-              <li key={item.title} className="flex items-start gap-3">
-                <Check className="mt-1 h-5 w-5 shrink-0 text-primary" />
-                <span>
-                  <strong>{item.title}</strong> — {item.desc}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20">
-        <div className="container mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-            Let's Get Your Coquitlam Business More Leads
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-secondary-foreground">
-            Book a free 20-minute call. We'll show you what's working for businesses in Coquitlam
-            right now and build you a quick plan — no strings attached.
-          </p>
-          <div className="mt-10">
-            <CalendlyButton>Book Your Free Call</CalendlyButton>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="bg-card border border-border rounded-2xl p-6 hover:border-teal/30 transition-colors">
+              <Zap className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">Trades & Contractors</h3>
+              <p className="text-muted-foreground">Plumbers, HVAC, and electricians across Coquitlam & Tri-Cities staying booked solid with precision-targeted campaigns.</p>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-6 hover:border-teal/30 transition-colors">
+              <Star className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">Hair Salons & Beauty Studios</h3>
+              <p className="text-muted-foreground">Consistent bookings in Coquitlam & Port Moody — no more relying on word-of-mouth and hoping the phone rings.</p>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-6 hover:border-teal/30 transition-colors">
+              <Target className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">Real Estate Agents</h3>
+              <p className="text-muted-foreground">Leads across the Tri-Cities market — targeted ad campaigns that reach motivated buyers and sellers throughout the area.</p>
+            </div>
+            <div className="bg-card border border-border rounded-2xl p-6 hover:border-teal/30 transition-colors">
+              <Users className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-xl font-bold text-foreground mb-2">Coaches & Consultants</h3>
+              <p className="text-muted-foreground">Growing coaching businesses across Metro Vancouver with proven ad strategies that attract ideal clients online.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <Footer />
-    </div>
-  </HelmetProvider>
+      {/* What You Get */}
+      <section className="bg-charcoal py-20">
+        <div className="container-custom">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground text-center mb-4">
+            What's Included
+          </h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            Everything your Coquitlam business needs to generate leads and grow — all managed under one roof.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {included.map((item) => (
+              <div key={item} className="flex items-start gap-3">
+                <CheckCircle className="w-5 h-5 text-teal mt-0.5 shrink-0" />
+                <span className="text-primary-foreground">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Coquitlam Businesses Are Investing in Paid Ads */}
+      <section className="bg-background py-20">
+        <div className="container-custom max-w-4xl">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
+            Why Coquitlam Businesses Are Investing in <span className="text-gradient">Paid Ads</span>
+          </h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            The Tri-Cities are among the fastest-growing markets in Metro Vancouver — and local businesses that invest in digital marketing now are building advantages that compound over time.
+          </p>
+          <div className="space-y-6 text-muted-foreground leading-relaxed">
+            <p>
+              Coquitlam has transformed dramatically over the last decade. Westwood Plateau and Burke Mountain are now established residential communities with tens of thousands of homeowners who need local services — from trades to health and wellness to professional coaching. Maillardville, one of the oldest neighbourhoods in the Tri-Cities, has its own commercial strip and a tight-knit community increasingly using online search to find local businesses. Port Moody and Port Coquitlam round out the Tri-Cities with their own distinct populations and commercial areas. For a digital marketing agency in Coquitlam BC, this geographic diversity is an asset — it means there's a large, multi-neighbourhood market to target, and businesses that get their geo-targeting right see dramatically better results than those running city-wide or Metro-wide campaigns.
+            </p>
+            <p>
+              The case for paid advertising as the primary lead generation channel for Coquitlam small businesses is straightforward: the Tri-Cities market is large enough to support real ad volume, but local competition hasn't caught up to Vancouver-level saturation yet. A plumber in Coquitlam running Google Ads today is not bidding against 50 other local plumbers the way a Vancouver contractor would be. A salon in Port Moody running Meta Ads can reach every woman in the target age demographic within a 10km radius at costs that would shock a salon owner in Burnaby or Vancouver. Lead generation in Coquitlam, Port Moody, and Port Coquitlam is still a relatively undercrowded space in the paid advertising ecosystem — and that translates directly to lower cost-per-lead for businesses that move now.
+            </p>
+            <p>
+              What drives results for a marketing agency Coquitlam businesses can rely on isn't just running ads — it's the combination of precise targeting, compelling creative, and landing pages built to convert. We target Westwood Plateau homeowners differently than we target Burke Mountain families because their demographics, income levels, and service needs differ. We build separate ad sets for Coquitlam proper versus Port Moody versus PoCo when the data supports it, ensuring your budget is concentrated where your best customers actually live. That level of Tri-Cities-specific precision is what separates campaigns that generate 5–10 qualified leads per week from campaigns that generate noise. For Coquitlam service businesses ready to stop relying on referrals and build a predictable lead pipeline, paid advertising managed by someone who knows this market is the highest-leverage investment you can make.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Coquitlam Marketing Process */}
+      <section className="bg-charcoal py-20">
+        <div className="container-custom">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground text-center mb-4">
+            Our Coquitlam Marketing Process
+          </h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            A clear, proven process that gets your Coquitlam business generating leads fast — with no guesswork.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-charcoal-light border border-gray-800 rounded-xl p-6">
+              <div className="font-display text-3xl font-bold text-teal mb-3">1</div>
+              <h3 className="font-display text-lg font-bold text-primary-foreground mb-2">Free Strategy Call</h3>
+              <p className="text-muted-foreground text-sm">We learn your Coquitlam market, your competition, and your goals. Whether you serve Coquitlam, Port Moody, PoCo, or all three — we plan around your service area.</p>
+            </div>
+            <div className="bg-charcoal-light border border-gray-800 rounded-xl p-6">
+              <div className="font-display text-3xl font-bold text-teal mb-3">2</div>
+              <h3 className="font-display text-lg font-bold text-primary-foreground mb-2">Campaign Build</h3>
+              <p className="text-muted-foreground text-sm">We build your Meta Ads or Google Ads campaign targeting Coquitlam and surrounding areas — Westwood Plateau, Burke Mountain, Port Moody, Port Coquitlam, and New Westminster.</p>
+            </div>
+            <div className="bg-charcoal-light border border-gray-800 rounded-xl p-6">
+              <div className="font-display text-3xl font-bold text-teal mb-3">3</div>
+              <h3 className="font-display text-lg font-bold text-primary-foreground mb-2">Launch & Optimize</h3>
+              <p className="text-muted-foreground text-sm">Live within 7 days. We monitor and optimize daily in the first 2 weeks to ensure your Tri-Cities campaign is delivering real, qualified leads from day one.</p>
+            </div>
+            <div className="bg-charcoal-light border border-gray-800 rounded-xl p-6">
+              <div className="font-display text-3xl font-bold text-teal mb-3">4</div>
+              <h3 className="font-display text-lg font-bold text-primary-foreground mb-2">Scale</h3>
+              <p className="text-muted-foreground text-sm">Once leads are flowing, we scale what's working and cut what isn't. Your cost-per-lead drops and your pipeline becomes predictable and reliable.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Areas We Serve */}
+      <section className="bg-background py-20">
+        <div className="container-custom">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-4">
+            Areas We Serve Near <span className="text-gradient">Coquitlam</span>
+          </h2>
+          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-10">
+            Our campaigns cover all of Coquitlam and the Tri-Cities region. We geo-target your exact service area so every ad dollar reaches the neighbourhoods and communities where your best customers live.
+          </p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            {['Port Moody', 'Port Coquitlam', 'Burnaby', 'New Westminster', 'Pitt Meadows', 'Maple Ridge'].map((area) => (
+              <span key={area} className="rounded-full bg-muted px-4 py-2 text-sm text-foreground">
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why AP Digital */}
+      <section className="bg-charcoal py-20">
+        <div className="container-custom">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground text-center mb-4">
+            Why Coquitlam Businesses Choose <span className="text-gradient">AP Digital</span>
+          </h2>
+          <p className="text-muted-foreground text-center max-w-xl mx-auto mb-12">
+            We're not a big agency with account managers and hand-offs. We're a focused team that delivers.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-card border border-border rounded-xl p-6">
+              <MapPin className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-lg font-bold text-foreground mb-2">Personal Management</h3>
+              <p className="text-muted-foreground text-sm">Arjun Sharma personally manages every account. No outsourcing, no hand-offs, no junior staff touching your campaigns.</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <TrendingUp className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-lg font-bold text-foreground mb-2">No Contracts</h3>
+              <p className="text-muted-foreground text-sm">Month-to-month with zero lock-in. We earn your business every single month by actually delivering results.</p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <Zap className="w-8 h-8 text-teal mb-4" />
+              <h3 className="font-display text-lg font-bold text-foreground mb-2">Fast Results</h3>
+              <p className="text-muted-foreground text-sm">Most Coquitlam clients see their first qualified leads within 2 weeks of launch. We move fast and optimize constantly.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-background py-20">
+        <div className="container-custom max-w-3xl">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground text-center mb-12">
+            Common Questions
+          </h2>
+          <Accordion type="single" collapsible>
+            {faqs.map((faq, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border-gray-800">
+                <AccordionTrigger className="text-left text-foreground font-medium hover:text-teal">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* Our Services */}
+      <OurServices />
+
+      {/* Dark CTA */}
+      <section className="bg-near-black py-20 text-center">
+        <div className="container-custom max-w-2xl">
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-primary-foreground mb-4">
+            Ready to Grow Your <span className="text-gradient">Coquitlam Business?</span>
+          </h2>
+          <p className="text-muted-foreground text-lg mb-8">
+            Book a free 20-minute strategy call. We'll show you what a campaign for your Coquitlam business would look like and what to expect. No pitch, no pressure.
+          </p>
+          <Button asChild variant="hero" size="xl" className="shadow-teal-lg">
+            <a href="https://calendly.com/apdigital-core/30min" target="_blank" rel="noopener noreferrer">
+              Book Your Free Strategy Call
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </a>
+          </Button>
+        </div>
+      </section>
+
+    </main>
+    <Footer />
+  </>
 );
 
 export default Coquitlam;
